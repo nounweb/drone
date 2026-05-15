@@ -1039,13 +1039,70 @@ footer {
   .roadmap-grid { grid-template-columns: 1fr; }
   .footer-inner { grid-template-columns: 1fr; }
   .footer-links { grid-template-columns: repeat(2, 1fr); }
+  .report-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 580px) {
-  .hero h1 { font-size: 28px; }
-  .scenario-grid { grid-template-columns: 1fr; }
-  .stats-inner { grid-template-columns: repeat(2, 1fr); }
-  .how-grid { grid-template-columns: 1fr; }
+  /* 헤더 */
+  header { padding: 0 16px; }
+  .header-inner { height: 54px; }
+  nav { display: none; }
+
+  /* 히어로 */
+  .hero { padding: 40px 16px 36px; }
+  .hero h1 { font-size: 26px; line-height: 1.3; }
+  .hero-btns { flex-direction: column; gap: 10px; }
+  .hero-btns a { width: 100%; text-align: center; justify-content: center; }
+
+  /* 섹션 공통 */
+  .section-inner { padding: 0 16px; }
+  .how-bg, .scenarios-bg, .chain-bg, .dashboard-bg, .report-bg, .roadmap-bg { padding: 48px 0; }
+
+  /* 통계 바 */
+  .stats-bar { padding: 20px 16px; }
+  .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .stat-num { font-size: 24px; }
+
+  /* 이용방법 */
+  .how-grid { grid-template-columns: 1fr; gap: 16px; }
+
+  /* 시나리오 */
+  .scenario-grid { grid-template-columns: 1fr; gap: 12px; }
+
+  /* AI 섹션 */
+  .ai-bg { padding: 48px 16px; }
+  .ai-prompt-box { font-size: 11px; padding: 16px; overflow-x: auto; }
+
+  /* 블록체인 */
+  .chain-visual { gap: 12px; }
+  .chain-block { padding: 16px; }
+  .chain-field-val { font-size: 10px; word-break: break-all; }
+
+  /* 대시보드 미리보기 */
+  .dashboard-frame { overflow-x: auto; }
+  .dash-sidebar { grid-template-columns: repeat(2, 1fr); display: grid; gap: 10px; }
+  .dash-map-placeholder svg { width: 100%; }
+
+  /* 앱 접근 섹션 (인라인 스타일 grid 오버라이드) */
+  #apps .section-inner > div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* 보고서 */
+  .report-grid { grid-template-columns: 1fr; gap: 24px; }
+  .report-sample { padding: 16px; }
+
+  /* 로드맵 */
+  .roadmap-grid { grid-template-columns: 1fr; gap: 16px; }
+
+  /* 푸터 */
+  .footer-inner { padding: 32px 16px; }
+  .footer-links { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .footer-bottom { flex-direction: column; gap: 8px; text-align: center; font-size: 11px; padding: 16px; }
+
+  /* 섹션 타이틀 */
+  .section-title { font-size: 22px; }
+  .section-desc { font-size: 14px; }
 }
 
 /* ── REPORT SECTION ── */
@@ -1180,7 +1237,7 @@ footer {
         <span class="dot"></span>
         AI 분석 시스템 운영 중
       </div>
-      <h1>사진 한 장으로<br><em>제주를 더 깨끗하게</em></h1>
+      <h1>사진 한 장으로<br><em>제주를 더 깨끗하게,<br>더 안전하게, 더 편리하게</em></h1>
       <p>시민이 촬영한 사진을 AI가 즉시 분석하여 최적의 대응 시나리오를 수립합니다. 쓰레기 수거부터 사고·범죄 신고까지, 모든 조치 내역은 Openhash 블록체인에 영구 기록됩니다.</p>
       <div class="hero-btns">
         <a href="webapp.html" class="btn-primary" style="text-decoration:none;">
@@ -1764,6 +1821,543 @@ footer {
     </div>
   </div>
 </section>
+
+<!-- OPENHASH MECHANISM ANIMATION -->
+<section style="background:#0A1628;padding:72px 24px;" id="openhash">
+  <div class="section-inner">
+    <div class="section-label" style="color:#7DD3B0;">데이터 무결성</div>
+    <h2 class="section-title" style="color:#fff;">OpenHash 5계층 기록 메커니즘</h2>
+    <p class="section-desc" style="color:rgba(255,255,255,0.65);">모든 데이터 원본은 각각의 Private Data Vault(PDV)에 저장되고, 그 Hash 값만 OpenHash 5계층 분산 원장에 기록됩니다.</p>
+
+    <div style="margin-top:40px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:32px;overflow:hidden;">
+      <canvas id="ohCanvas" width="1100" height="420" style="width:100%;height:auto;display:block;"></canvas>
+    </div>
+
+    <!-- Legend -->
+    <div style="display:flex;gap:24px;margin-top:20px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.7);">
+        <div style="width:12px;height:12px;border-radius:2px;background:#0EA47A;"></div> PDV 원본 데이터 저장
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.7);">
+        <div style="width:12px;height:12px;border-radius:2px;background:#F59E0B;"></div> Hash 값 전송
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.7);">
+        <div style="width:12px;height:12px;border-radius:2px;background:#60A5FA;"></div> OpenHash 계층 기록
+      </div>
+    </div>
+
+    <!-- Second animation: Data→PDV & Hash→Layers -->
+    <div style="margin-top:48px;">
+      <div class="section-label" style="color:#7DD3B0;margin-bottom:10px;">데이터 흐름 시각화</div>
+      <p style="font-size:14px;color:rgba(255,255,255,0.55);margin-bottom:24px;">원본 데이터는 PDV로, Hash 값은 OpenHash 5계층으로 — 동시에 기록됩니다.</p>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px;overflow:hidden;">
+        <canvas id="ohCanvas2" width="1100" height="380" style="width:100%;height:auto;display:block;"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  const canvas = document.getElementById('ohCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 1100, H = 420;
+
+  // ── Layout constants ──────────────────────────────────────────
+  const PDV_X = 60;
+  const PDV_W = 130, PDV_H = 52;
+  const pdvs = [
+    { y: 60,  label: '시민 대화', icon: '💬', color: '#0EA47A' },
+    { y: 130, label: 'AI 업무지시', icon: '🤖', color: '#0EA47A' },
+    { y: 200, label: '현장 결과', icon: '📋', color: '#0EA47A' },
+    { y: 270, label: '보고서', icon: '📄', color: '#0EA47A' },
+    { y: 340, label: '위치/사진', icon: '📷', color: '#0EA47A' },
+  ];
+
+  // OpenHash 5 layers (right side, vertical stack)
+  const LYR_X = 720;
+  const LYR_W = 330;
+  const layers = [
+    { label: 'L5  글로벌', sub: '19개 글로벌 노드', color: '#7C3AED' },
+    { label: 'L4  국가',   sub: '국가 최종성 보장',  color: '#2563EB' },
+    { label: 'L3  지역',   sub: '제주·부산·서울',    color: '#0EA5E9' },
+    { label: 'L2  구역',   sub: '읍·면·동 집계',     color: '#06B6D4' },
+    { label: 'L1  디바이스', sub: '신고 단말',        color: '#10B981' },
+  ];
+  const LYR_H = 54, LYR_GAP = 14;
+  const lyrTotalH = layers.length * LYR_H + (layers.length - 1) * LYR_GAP;
+  const lyrStartY = (H - lyrTotalH) / 2;
+
+  // Hash box (middle)
+  const HASH_X = 340, HASH_Y = 160, HASH_W = 200, HASH_H = 100;
+
+  // ── Animation state ───────────────────────────────────────────
+  let tick = 0;
+  const CYCLE = 260; // frames per full cycle
+
+  // Particle pool
+  const particles = [];
+  function spawnParticle(fromPdvIdx) {
+    const pdv = pdvs[fromPdvIdx];
+    particles.push({
+      phase: 'toHash',   // toHash → hashing → toLayer
+      pdvIdx: fromPdvIdx,
+      lyrIdx: fromPdvIdx % layers.length,
+      x: PDV_X + PDV_W,
+      y: pdv.y + PDV_H / 2,
+      tx: HASH_X, ty: HASH_Y + HASH_H / 2,
+      t: 0, dur: 35,
+      hashWait: 18,
+      hashT: 0,
+    });
+  }
+
+  // ── Draw helpers ──────────────────────────────────────────────
+  function roundRect(x, y, w, h, r, fill, stroke) {
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, r);
+    if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+    if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 1.5; ctx.stroke(); }
+  }
+
+  function lerp(a, b, t) { return a + (b - a) * Math.min(t, 1); }
+  function easeInOut(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+  // ── Main draw ─────────────────────────────────────────────────
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Background subtle grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < W; x += 40) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+    for (let y = 0; y < H; y += 40) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+    // ── PDV boxes ────────────────────────────────────────────────
+    pdvs.forEach((p, i) => {
+      const pulse = 0.7 + 0.3 * Math.sin(tick * 0.04 + i * 1.2);
+      roundRect(PDV_X, p.y, PDV_W, PDV_H, 8,
+        `rgba(14,164,122,${0.08 + 0.04*pulse})`,
+        `rgba(14,164,122,${0.5 * pulse})`);
+      // icon
+      ctx.font = '18px serif';
+      ctx.fillText(p.icon, PDV_X + 10, p.y + PDV_H/2 + 7);
+      // label
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.font = '500 12px "Noto Sans KR", sans-serif';
+      ctx.fillText(p.label, PDV_X + 36, p.y + 20);
+      // sub label
+      ctx.fillStyle = 'rgba(14,164,122,0.9)';
+      ctx.font = '10px monospace';
+      ctx.fillText('PDV-' + String(i+1).padStart(2,'0'), PDV_X + 36, p.y + 36);
+    });
+
+    // PDV title
+    ctx.fillStyle = 'rgba(14,164,122,0.7)';
+    ctx.font = 'bold 11px "Noto Sans KR", sans-serif';
+    ctx.fillText('Private Data Vault', PDV_X, 42);
+
+    // ── Hash Engine box ───────────────────────────────────────────
+    const hPulse = 0.5 + 0.5 * Math.sin(tick * 0.07);
+    roundRect(HASH_X, HASH_Y, HASH_W, HASH_H, 10,
+      'rgba(96,165,250,0.08)', 'rgba(96,165,250,0.5)');
+    ctx.fillStyle = '#60A5FA';
+    ctx.font = 'bold 13px "IBM Plex Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('SHA-256', HASH_X + HASH_W/2, HASH_Y + 34);
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.font = '11px monospace';
+    ctx.fillText('Hash Engine', HASH_X + HASH_W/2, HASH_Y + 54);
+    // animated hash string
+    const hashChars = '0x' + [...Array(8)].map(()=>Math.floor((Math.sin(tick*0.13 + Math.random()*10)*0.5+0.5)*16).toString(16)).join('') + '…';
+    ctx.fillStyle = `rgba(245,158,11,${0.5 + 0.5*hPulse})`;
+    ctx.font = '10px monospace';
+    ctx.fillText(hashChars, HASH_X + HASH_W/2, HASH_Y + 76);
+    ctx.textAlign = 'left';
+
+    // ── OpenHash Layer boxes ───────────────────────────────────────
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = 'bold 11px "Noto Sans KR", sans-serif';
+    ctx.fillText('OpenHash 5계층 분산 원장', LYR_X, lyrStartY - 14);
+
+    layers.forEach((l, i) => {
+      const ly = lyrStartY + i * (LYR_H + LYR_GAP);
+      const lp = 0.6 + 0.4 * Math.sin(tick * 0.05 + i * 0.8);
+      roundRect(LYR_X, ly, LYR_W, LYR_H, 8,
+        `rgba(${hexToRgb(l.color)},0.12)`,
+        `rgba(${hexToRgb(l.color)},${0.6*lp})`);
+      // color bar left
+      roundRect(LYR_X, ly, 4, LYR_H, [4,0,0,4], l.color, null);
+      ctx.fillStyle = l.color;
+      ctx.font = 'bold 12px "IBM Plex Mono", monospace';
+      ctx.fillText(l.label, LYR_X + 16, ly + 22);
+      ctx.fillStyle = 'rgba(255,255,255,0.45)';
+      ctx.font = '11px "Noto Sans KR", sans-serif';
+      ctx.fillText(l.sub, LYR_X + 16, ly + 40);
+    });
+
+    // ── Connector lines (static, dashed) ─────────────────────────
+    ctx.setLineDash([4, 4]);
+    ctx.lineWidth = 1;
+    // PDV → Hash
+    pdvs.forEach(p => {
+      ctx.strokeStyle = 'rgba(14,164,122,0.2)';
+      ctx.beginPath();
+      ctx.moveTo(PDV_X + PDV_W, p.y + PDV_H/2);
+      ctx.lineTo(HASH_X, HASH_Y + HASH_H/2);
+      ctx.stroke();
+    });
+    // Hash → Layers
+    layers.forEach((l, i) => {
+      const ly = lyrStartY + i * (LYR_H + LYR_GAP) + LYR_H/2;
+      ctx.strokeStyle = 'rgba(96,165,250,0.15)';
+      ctx.beginPath();
+      ctx.moveTo(HASH_X + HASH_W, HASH_Y + HASH_H/2);
+      ctx.lineTo(LYR_X, ly);
+      ctx.stroke();
+    });
+    ctx.setLineDash([]);
+
+    // ── Particles ──────────────────────────────────────────────────
+    particles.forEach((p, idx) => {
+      p.t++;
+      if (p.phase === 'toHash') {
+        const prog = easeInOut(p.t / p.dur);
+        p.x = lerp(PDV_X + PDV_W, HASH_X, prog);
+        p.y = lerp(pdvs[p.pdvIdx].y + PDV_H/2, HASH_Y + HASH_H/2, prog);
+        // draw dot
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 5, 0, Math.PI*2);
+        ctx.fillStyle = '#0EA47A';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 8, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(14,164,122,0.2)';
+        ctx.fill();
+        if (p.t >= p.dur) { p.phase = 'hashing'; p.t = 0; }
+      } else if (p.phase === 'hashing') {
+        // pulse in hash box
+        if (p.t >= p.hashWait) { p.phase = 'toLyr'; p.t = 0; p.dur = 40; }
+      } else if (p.phase === 'toLyr') {
+        const lyr = layers[p.lyrIdx];
+        const tly = lyrStartY + p.lyrIdx * (LYR_H + LYR_GAP) + LYR_H/2;
+        const prog = easeInOut(p.t / p.dur);
+        p.x = lerp(HASH_X + HASH_W, LYR_X, prog);
+        p.y = lerp(HASH_Y + HASH_H/2, tly, prog);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 5, 0, Math.PI*2);
+        ctx.fillStyle = '#F59E0B';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 8, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(245,158,11,0.25)';
+        ctx.fill();
+        if (p.t >= p.dur) {
+          // flash the layer
+          flashLayer(p.lyrIdx);
+          particles.splice(idx, 1);
+        }
+      }
+    });
+
+    // ── Layer flash effects ────────────────────────────────────────
+    layerFlashes.forEach((f, i) => {
+      f.t--;
+      const ly = lyrStartY + f.lyrIdx * (LYR_H + LYR_GAP);
+      const alpha = f.t / f.maxT;
+      roundRect(LYR_X, ly, LYR_W, LYR_H, 8, `rgba(245,158,11,${0.3*alpha})`, null);
+      // checkmark
+      ctx.fillStyle = `rgba(245,158,11,${alpha})`;
+      ctx.font = 'bold 14px monospace';
+      ctx.textAlign = 'right';
+      ctx.fillText('✓ Hash 기록', LYR_X + LYR_W - 8, ly + LYR_H/2 + 5);
+      ctx.textAlign = 'left';
+      if (f.t <= 0) layerFlashes.splice(i, 1);
+    });
+
+    tick++;
+  }
+
+  // Layer flash state
+  const layerFlashes = [];
+  function flashLayer(lyrIdx) {
+    layerFlashes.push({ lyrIdx, t: 50, maxT: 50 });
+  }
+
+  // Spawn logic: one particle per PDV, staggered
+  function spawnCycle() {
+    pdvs.forEach((p, i) => {
+      setTimeout(() => spawnParticle(i), i * 280);
+    });
+  }
+
+  // Hex to RGB helper
+  function hexToRgb(hex) {
+    const r = parseInt(hex.slice(1,3),16);
+    const g = parseInt(hex.slice(3,5),16);
+    const b = parseInt(hex.slice(5,7),16);
+    return `${r},${g},${b}`;
+  }
+
+  // Start animation
+  spawnCycle();
+  setInterval(spawnCycle, CYCLE * (1000/60));
+  function loop() { draw(); requestAnimationFrame(loop); }
+  loop();
+})();
+</script>
+
+<!-- OPENHASH FLOW ANIMATION 2: Data→PDV & Hash→Layers -->
+<script>
+(function() {
+  const canvas = document.getElementById('ohCanvas2');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 1100, H = 380;
+
+  // ── 색상 팔레트
+  const C = {
+    green:  '#0EA47A', amber:  '#F59E0B',
+    blue:   '#60A5FA', purple: '#A78BFA',
+    cyan:   '#22D3EE', muted:  'rgba(255,255,255,0.08)',
+  };
+
+  // ── 중앙 "이벤트 소스" 박스 (가운데 위쪽)
+  const SRC_X = 430, SRC_Y = 20, SRC_W = 240, SRC_H = 64;
+
+  // ── PDV 박스 5개 (왼쪽)
+  const pdvs = [
+    { label:'💬 시민 대화',   sub:'PDV-01' },
+    { label:'🤖 AI 업무지시', sub:'PDV-02' },
+    { label:'📋 현장 결과',   sub:'PDV-03' },
+    { label:'📄 보고서',      sub:'PDV-04' },
+    { label:'📷 위치/사진',   sub:'PDV-05' },
+  ];
+  const PDV_W = 150, PDV_H = 48, PDV_GAP = 14;
+  const PDV_X = 28;
+  const pdvTotalH = pdvs.length * PDV_H + (pdvs.length-1) * PDV_GAP;
+  const pdvStartY = (H - pdvTotalH) / 2;
+
+  // ── OpenHash 5 계층 (오른쪽)
+  const layers = [
+    { label:'L5  글로벌', sub:'19개 글로벌 노드', color:'#7C3AED' },
+    { label:'L4  국가',   sub:'국가 최종성',       color:'#2563EB' },
+    { label:'L3  지역',   sub:'제주·부산·서울',    color:'#0EA5E9' },
+    { label:'L2  구역',   sub:'읍·면·동 집계',     color:'#06B6D4' },
+    { label:'L1  디바이스',sub:'신고 단말',         color:'#10B981' },
+  ];
+  const LYR_W = 200, LYR_H = 48, LYR_GAP = 14;
+  const LYR_X = W - LYR_W - 28;
+  const lyrTotalH = layers.length * LYR_H + (layers.length-1) * LYR_GAP;
+  const lyrStartY = (H - lyrTotalH) / 2;
+
+  // ── 헬퍼
+  function hexRgb(h) {
+    return [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+  }
+  function lerp(a,b,t){ return a+(b-a)*Math.min(t,1); }
+  function ease(t){ return t<.5?2*t*t:-1+(4-2*t)*t; }
+  function rr(x,y,w,h,r,fill,stroke,lw=1.5){
+    ctx.beginPath(); ctx.roundRect(x,y,w,h,r);
+    if(fill){ctx.fillStyle=fill;ctx.fill();}
+    if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw;ctx.stroke();}
+  }
+
+  // ── 파티클
+  const particles = [];
+  // 'data' 타입: SRC → PDV (초록)
+  // 'hash' 타입: SRC → Layer (노란)
+  let tick = 0;
+
+  function spawnData(pdvIdx) {
+    particles.push({
+      type: 'data', pdvIdx,
+      x: SRC_X + SRC_W/2, y: SRC_Y + SRC_H,
+      tx: PDV_X + PDV_W,  ty: pdvStartY + pdvIdx*(PDV_H+PDV_GAP) + PDV_H/2,
+      t: 0, dur: 50, done: false,
+    });
+  }
+  function spawnHash(lyrIdx) {
+    particles.push({
+      type: 'hash', lyrIdx,
+      x: SRC_X + SRC_W/2, y: SRC_Y + SRC_H,
+      tx: LYR_X,           ty: lyrStartY + lyrIdx*(LYR_H+LYR_GAP) + LYR_H/2,
+      t: 0, dur: 55, done: false,
+    });
+  }
+
+  // flash 효과
+  const pdvFlash  = new Array(pdvs.length).fill(0);
+  const lyrFlash  = new Array(layers.length).fill(0);
+
+  // ── draw
+  function draw() {
+    ctx.clearRect(0,0,W,H);
+
+    // 배경 그리드
+    ctx.strokeStyle='rgba(255,255,255,0.03)'; ctx.lineWidth=1;
+    for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+    // ── 중앙 소스 박스
+    const sp = 0.6+0.4*Math.sin(tick*0.06);
+    rr(SRC_X, SRC_Y, SRC_W, SRC_H, 10,
+      'rgba(96,165,250,0.10)', `rgba(96,165,250,${0.6*sp})`, 1.5);
+    ctx.fillStyle='#60A5FA'; ctx.font='bold 13px "IBM Plex Mono",monospace';
+    ctx.textAlign='center';
+    ctx.fillText('신규 이벤트 발생', SRC_X+SRC_W/2, SRC_Y+26);
+    ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.font='11px monospace';
+    ctx.fillText('민원 신고 · AI분석 · 결과보고', SRC_X+SRC_W/2, SRC_Y+46);
+    ctx.textAlign='left';
+
+    // 소스 → 왼쪽 화살 안내선
+    ctx.setLineDash([3,5]); ctx.lineWidth=1;
+    pdvs.forEach((_,i)=>{
+      const ty = pdvStartY+i*(PDV_H+PDV_GAP)+PDV_H/2;
+      ctx.strokeStyle='rgba(14,164,122,0.15)';
+      ctx.beginPath();
+      ctx.moveTo(SRC_X, SRC_Y+SRC_H/2);
+      ctx.bezierCurveTo(SRC_X-80, SRC_Y+SRC_H/2, PDV_X+PDV_W+80, ty, PDV_X+PDV_W, ty);
+      ctx.stroke();
+    });
+    // 소스 → 오른쪽 안내선
+    layers.forEach((_,i)=>{
+      const ty = lyrStartY+i*(LYR_H+LYR_GAP)+LYR_H/2;
+      ctx.strokeStyle='rgba(245,158,11,0.12)';
+      ctx.beginPath();
+      ctx.moveTo(SRC_X+SRC_W, SRC_Y+SRC_H/2);
+      ctx.bezierCurveTo(SRC_X+SRC_W+80, SRC_Y+SRC_H/2, LYR_X-80, ty, LYR_X, ty);
+      ctx.stroke();
+    });
+    ctx.setLineDash([]);
+
+    // 레이블
+    ctx.fillStyle='rgba(14,164,122,0.7)'; ctx.font='bold 11px "Noto Sans KR",sans-serif';
+    ctx.fillText('Private Data Vault', PDV_X, pdvStartY-12);
+    ctx.fillStyle='rgba(255,255,255,0.45)'; ctx.font='bold 11px "Noto Sans KR",sans-serif';
+    ctx.textAlign='right';
+    ctx.fillText('OpenHash 5계층 분산 원장', LYR_X+LYR_W, lyrStartY-12);
+    ctx.textAlign='left';
+
+    // ── PDV 박스
+    pdvs.forEach((p,i)=>{
+      const fy = pdvStartY+i*(PDV_H+PDV_GAP);
+      const fl = pdvFlash[i];
+      const base = fl>0 ? `rgba(14,164,122,${0.15+0.25*(fl/40)})` : 'rgba(14,164,122,0.08)';
+      const bdr  = fl>0 ? `rgba(14,164,122,${0.8*(fl/40)})` : 'rgba(14,164,122,0.35)';
+      rr(PDV_X, fy, PDV_W, PDV_H, 7, base, bdr, 1.5);
+      rr(PDV_X, fy, 3, PDV_H, [3,0,0,3], C.green, null);
+      ctx.fillStyle='rgba(255,255,255,0.85)'; ctx.font='12px "Noto Sans KR",sans-serif';
+      ctx.fillText(p.label, PDV_X+12, fy+20);
+      ctx.fillStyle='rgba(14,164,122,0.8)'; ctx.font='10px monospace';
+      ctx.fillText(p.sub, PDV_X+12, fy+36);
+      if(fl>0){
+        ctx.fillStyle=`rgba(14,164,122,${fl/40})`;
+        ctx.font='bold 11px monospace';
+        ctx.textAlign='right';
+        ctx.fillText('저장 완료 ✓', PDV_X+PDV_W-6, fy+PDV_H/2+5);
+        ctx.textAlign='left';
+        pdvFlash[i]--;
+      }
+    });
+
+    // ── Layer 박스
+    layers.forEach((l,i)=>{
+      const ly = lyrStartY+i*(LYR_H+LYR_GAP);
+      const fl = lyrFlash[i];
+      const [r,g,b] = hexRgb(l.color);
+      const base = fl>0 ? `rgba(${r},${g},${b},${0.15+0.25*(fl/40)})` : `rgba(${r},${g},${b},0.10)`;
+      const bdr  = fl>0 ? `rgba(${r},${g},${b},${0.9*(fl/40)})` : `rgba(${r},${g},${b},0.45)`;
+      rr(LYR_X, ly, LYR_W, LYR_H, 7, base, bdr, 1.5);
+      rr(LYR_X, ly, 3, LYR_H, [3,0,0,3], l.color, null);
+      ctx.fillStyle=l.color; ctx.font='bold 11px "IBM Plex Mono",monospace';
+      ctx.fillText(l.label, LYR_X+12, ly+19);
+      ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.font='10px "Noto Sans KR",sans-serif';
+      ctx.fillText(l.sub, LYR_X+12, ly+35);
+      if(fl>0){
+        ctx.fillStyle=`rgba(245,158,11,${fl/40})`;
+        ctx.font='bold 10px monospace';
+        ctx.textAlign='right';
+        ctx.fillText('Hash ✓', LYR_X+LYR_W-8, ly+LYR_H/2+5);
+        ctx.textAlign='left';
+        lyrFlash[i]--;
+      }
+    });
+
+    // ── 파티클 그리기
+    for(let i=particles.length-1;i>=0;i--){
+      const p=particles[i];
+      p.t++;
+      const prog=ease(Math.min(p.t/p.dur,1));
+
+      // 베지어 경로로 곡선 이동
+      let cx1,cy1,cx2,cy2;
+      if(p.type==='data'){
+        cx1=lerp(SRC_X+SRC_W/2, p.tx, 0.3)-80;
+        cy1=lerp(SRC_Y+SRC_H, p.ty, 0.3);
+        cx2=lerp(SRC_X+SRC_W/2, p.tx, 0.7)-40;
+        cy2=lerp(SRC_Y+SRC_H, p.ty, 0.7);
+      } else {
+        cx1=lerp(SRC_X+SRC_W/2, p.tx, 0.3)+80;
+        cy1=lerp(SRC_Y+SRC_H, p.ty, 0.3);
+        cx2=lerp(SRC_X+SRC_W/2, p.tx, 0.7)+40;
+        cy2=lerp(SRC_Y+SRC_H, p.ty, 0.7);
+      }
+      // 드 카스텔조 계산
+      const t=prog;
+      const ax=lerp(SRC_X+SRC_W/2,cx1,t), ay=lerp(SRC_Y+SRC_H,cy1,t);
+      const bx=lerp(cx1,cx2,t),          bby=lerp(cy1,cy2,t);
+      const ccx=lerp(cx2,p.tx,t),         ccy=lerp(cy2,p.ty,t);
+      const dx=lerp(ax,bx,t),             dy=lerp(ay,bby,t);
+      const ex=lerp(bx,ccx,t),            ey=lerp(bby,ccy,t);
+      const px2=lerp(dx,ex,t),            py2=lerp(dy,ey,t);
+
+      const col = p.type==='data' ? C.green : C.amber;
+      const [cr,cg,cb] = hexRgb(col);
+
+      // 꼬리 효과
+      ctx.beginPath();
+      ctx.arc(px2,py2,7,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${cr},${cg},${cb},0.15)`;
+      ctx.fill();
+      // 메인 점
+      ctx.beginPath();
+      ctx.arc(px2,py2,4,0,Math.PI*2);
+      ctx.fillStyle=col; ctx.fill();
+      // 하이라이트
+      ctx.beginPath();
+      ctx.arc(px2-1,py2-1,1.5,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.fill();
+
+      if(p.t>=p.dur && !p.done){
+        p.done=true;
+        if(p.type==='data') pdvFlash[p.pdvIdx]=40;
+        else                lyrFlash[p.lyrIdx]=40;
+        particles.splice(i,1);
+      }
+    }
+
+    tick++;
+  }
+
+  // ── 주기적 스폰: 각 PDV + 각 Layer로 순차 발사
+  let cycleIdx = 0;
+  function triggerCycle() {
+    const pdvIdx = cycleIdx % pdvs.length;
+    const lyrIdx = cycleIdx % layers.length;
+    spawnData(pdvIdx);
+    setTimeout(()=>spawnHash(lyrIdx), 80); // hash는 살짝 뒤에
+    cycleIdx++;
+  }
+
+  triggerCycle();
+  setInterval(triggerCycle, 700);
+
+  function loop(){ draw(); requestAnimationFrame(loop); }
+  loop();
+})();
+</script>
 
 <!-- ROADMAP -->
 <section class="roadmap-bg">
