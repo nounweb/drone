@@ -3037,6 +3037,8 @@ footer {
 
     addUserMessage(text);
     history.push({ role: 'user', content: text });
+    // 캐시 효율 유지: 최근 10턴(20개 메시지)만 보존
+    if (history.length > 20) history.splice(0, 2);
     input.value = '';
     input.style.height = 'auto';
     sendBtn.disabled = true;
@@ -3061,8 +3063,11 @@ footer {
           body: JSON.stringify({
             model: p.model,
             max_tokens: 512,
-            system: SYSTEM_PROMPT,
-            messages: history
+            // system을 messages[0]에 고정 → 캐시 prefix 안정화
+            messages: [
+              { role: 'system', content: SYSTEM_PROMPT },
+              ...history
+            ]
           })
         });
         if (!resp.ok) throw new Error(`API ${resp.status}`);
@@ -3075,6 +3080,7 @@ footer {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
             system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
             contents: history.map(m => ({
               role: m.role === 'assistant' ? 'model' : 'user',
